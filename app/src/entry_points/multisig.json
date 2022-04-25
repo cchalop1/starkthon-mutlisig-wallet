@@ -1,0 +1,59 @@
+{
+  "CONSTRUCTOR": [
+    {
+      "offset": "0x4b3",
+      "selector": "0x28ffe4ff0f226a9107253e17a904099aa4f63a02a5621de0576e5aa71bc5194"
+    }
+  ],
+  "EXTERNAL": [
+    {
+      "offset": "0x44c",
+      "selector": "0x70c00f82a8ed5ba7b640e2b41e722aa4631cff867ab41f3599ba07d4882b0d"
+    },
+    {
+      "offset": "0x5bb",
+      "selector": "0x9116201f12fa34ea43003c21ff6ecb228215a3cdf08d3842fb488e07298e9f"
+    },
+    {
+      "offset": "0x50d",
+      "selector": "0xbe0560f36c8ddc7731879d459ec9f5b0b7601e14fe86f9158cf82c87c6cc61"
+    },
+    {
+      "offset": "0x429",
+      "selector": "0xde7008f10f6360a131e9189d6dbedb15a13f4e3ae8aa52be3bbbf35525e3fa"
+    },
+    {
+      "offset": "0x565",
+      "selector": "0x12f1d041f7abcf5a3c3d2b236bbda2a31d07fddf9380d7477248bd33c312e53"
+    },
+    {
+      "offset": "0x406",
+      "selector": "0x1e25e9e4e6ac8ba4ef18ff412963c3ddfc0d8aafea6fb7057dd7e5d2b40ae16"
+    },
+    {
+      "offset": "0x46e",
+      "selector": "0x2261500daab3619a2d2c5c857ec742e5929d9965877d6d2e2a2596fa9bdc72f"
+    },
+    {
+      "offset": "0x3c7",
+      "selector": "0x23387819bb6822c2a1938fbfdd165ffce266919b70de88a164969f0b2541e09"
+    },
+    {
+      "offset": "0x48f",
+      "selector": "0x282fbe11c1b29fa2d8efdbd06109e04fb63366b6eab7ede267250471a2fce27"
+    },
+    {
+      "offset": "0x3e5",
+      "selector": "0x29d2a076cb8220f97655c76a76a9196fc9c3b4cf5324ef9ccc20e86e694b878"
+    },
+    {
+      "offset": "0x3a6",
+      "selector": "0x33987c11ca7bd1f96697e9dab16f48ccb85a129a3c16fe9bb4f5b6bfba0ba80"
+    },
+    {
+      "offset": "0x61c",
+      "selector": "0x377be1f28e16b4f81636c060ca255614a8777c0dc13d125d0274659ffc9f15e"
+    }
+  ],
+  "L1_HANDLER": []
+}
