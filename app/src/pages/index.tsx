@@ -13,16 +13,19 @@ const Home: NextPage = () => {
   const { contract: mutlisig } = useMutliContract();
   console.log(mutlisig);
 
-
   return (
     <div>
       <h2>Wallet</h2>
       <ConnectWallet />
       <CreateMutliSignWallet />
-      <SubmitTransaction contract={mutlisig} />
-      <Transaction contract={mutlisig} name="confirm_transaction" />
-      <Transaction contract={mutlisig} name="revoke_confirmation" />
-      <Transaction contract={mutlisig} name="execute_transaction" />
+      {mutlisig && (
+        <>
+          <SubmitTransaction contract={mutlisig} />
+          <Transaction contract={mutlisig} name="confirm_transaction" />
+          <Transaction contract={mutlisig} name="revoke_confirmation" />
+          <Transaction contract={mutlisig} name="execute_transaction" />
+        </>
+      )}
       <IncrementCounter />
     </div>
   );

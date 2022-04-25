@@ -1,9 +1,14 @@
 import { useStarknet, useStarknetInvoke } from "@starknet-react/core";
 import React, { useState } from "react";
+import { Contract, ContractInterface } from "starknet";
 import { toBN } from "starknet/dist/utils/number";
 import { bnToUint256 } from "starknet/dist/utils/uint256";
 
-export function SubmitTransaction(props) {
+type Props = {
+  contract: Contract;
+};
+
+export function SubmitTransaction(props: Props) {
   const { account } = useStarknet();
   const { invoke, error } = useStarknetInvoke({
     contract: props.contract,
