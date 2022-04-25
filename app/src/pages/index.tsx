@@ -1,11 +1,11 @@
 import { useContract, useStarknetCall } from "@starknet-react/core";
 import type { NextPage } from "next";
 import { ConnectWallet } from "~/components/ConnectWallet";
-import { CreateMutliSignWallet } from "~/components/CreateMutliSignWallet";
-import { SubmitTransaction } from "../components/SubmitTransaction";
-import { Transaction } from "../components/Transaction";
+import { CreateMutliSignWallet } from "~/components/multisig/CreateMutliSignWallet";
+import { SubmitTransaction } from "../components/multisig/SubmitTransaction";
+import { Transaction } from "../components/multisig/Transaction";
 
-import MultisigAbi from "../abi/multisig.json";
+import MultisigAbi from "../abi/multisig_tx.json";
 import { Abi } from "starknet";
 import { useMemo } from "react";
 import { toBN } from "starknet/dist/utils/number";
@@ -14,7 +14,7 @@ const Home: NextPage = () => {
   const { contract: mutlisig } = useContract({
     abi: MultisigAbi as Abi,
     address:
-      "0x03510914c3303fefce9ade621791695f0055c04a82e28d8b969dad36e3a1e0c8",
+      "0x023d3a5d02e079b9df97539f23479d6be9e1432deeaef942a37edfa4f1d8ead7",
   });
 
   const { data: numberTransaction } = useStarknetCall({

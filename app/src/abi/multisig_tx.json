@@ -1,0 +1,332 @@
+[
+  {
+    "data": [
+      {
+        "name": "tx_id",
+        "type": "felt"
+      },
+      {
+        "name": "owner",
+        "type": "felt"
+      },
+      {
+        "name": "l2_contract",
+        "type": "felt"
+      },
+      {
+        "name": "payload_len",
+        "type": "felt"
+      },
+      {
+        "name": "payload",
+        "type": "felt*"
+      }
+    ],
+    "keys": [],
+    "name": "transaction_submited",
+    "type": "event"
+  },
+  {
+    "data": [
+      {
+        "name": "tx_id",
+        "type": "felt"
+      },
+      {
+        "name": "owner",
+        "type": "felt"
+      }
+    ],
+    "keys": [],
+    "name": "transaction_confirmed",
+    "type": "event"
+  },
+  {
+    "data": [
+      {
+        "name": "tx_id",
+        "type": "felt"
+      },
+      {
+        "name": "owner",
+        "type": "felt"
+      }
+    ],
+    "keys": [],
+    "name": "transaction_executed",
+    "type": "event"
+  },
+  {
+    "data": [
+      {
+        "name": "tx_id",
+        "type": "felt"
+      },
+      {
+        "name": "owner",
+        "type": "felt"
+      }
+    ],
+    "keys": [],
+    "name": "confirmation_revoked",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "name": "owner",
+        "type": "felt"
+      }
+    ],
+    "name": "view_is_owner",
+    "outputs": [
+      {
+        "name": "res",
+        "type": "felt"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "view_required_confirmations",
+    "outputs": [
+      {
+        "name": "res",
+        "type": "felt"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "view_tx_count",
+    "outputs": [
+      {
+        "name": "res",
+        "type": "felt"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "tx_id",
+        "type": "felt"
+      }
+    ],
+    "name": "view_transaction_data",
+    "outputs": [
+      {
+        "name": "res",
+        "type": "felt"
+      },
+      {
+        "name": "function_selector",
+        "type": "felt"
+      },
+      {
+        "name": "payload_len",
+        "type": "felt"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "tx_id",
+        "type": "felt"
+      },
+      {
+        "name": "owner",
+        "type": "felt"
+      }
+    ],
+    "name": "view_is_confirmed",
+    "outputs": [
+      {
+        "name": "res",
+        "type": "felt"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "tx_id",
+        "type": "felt"
+      }
+    ],
+    "name": "view_is_executed",
+    "outputs": [
+      {
+        "name": "res",
+        "type": "felt"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "tx_id",
+        "type": "felt"
+      }
+    ],
+    "name": "view_num_confirmations",
+    "outputs": [
+      {
+        "name": "res",
+        "type": "felt"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_required_confirmations",
+        "type": "felt"
+      },
+      {
+        "name": "_owners_len",
+        "type": "felt"
+      },
+      {
+        "name": "_owners",
+        "type": "felt*"
+      }
+    ],
+    "name": "constructor",
+    "outputs": [],
+    "type": "constructor"
+  },
+  {
+    "inputs": [
+      {
+        "name": "l2_contract",
+        "type": "felt"
+      },
+      {
+        "name": "function_selector",
+        "type": "felt"
+      },
+      {
+        "name": "payload_len",
+        "type": "felt"
+      },
+      {
+        "name": "payload",
+        "type": "felt*"
+      }
+    ],
+    "name": "submit_transaction",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "tx_id",
+        "type": "felt"
+      }
+    ],
+    "name": "confirm_transaction",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "tx_id",
+        "type": "felt"
+      }
+    ],
+    "name": "revoke_confirmation",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "tx_id",
+        "type": "felt"
+      }
+    ],
+    "name": "execute_transaction",
+    "outputs": [
+      {
+        "name": "response_len",
+        "type": "felt"
+      },
+      {
+        "name": "response",
+        "type": "felt*"
+      }
+    ],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "l2_contract",
+        "type": "felt"
+      },
+      {
+        "name": "function_selector",
+        "type": "felt"
+      },
+      {
+        "name": "payload_len",
+        "type": "felt"
+      },
+      {
+        "name": "payload",
+        "type": "felt*"
+      }
+    ],
+    "name": "execute",
+    "outputs": [
+      {
+        "name": "response_len",
+        "type": "felt"
+      },
+      {
+        "name": "response",
+        "type": "felt*"
+      }
+    ],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "tx_id",
+        "type": "felt"
+      }
+    ],
+    "name": "get_transaction_payload",
+    "outputs": [
+      {
+        "name": "payload_len",
+        "type": "felt"
+      },
+      {
+        "name": "payload",
+        "type": "felt*"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

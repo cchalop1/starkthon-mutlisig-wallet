@@ -17,6 +17,51 @@
         },
         "hints": {},
         "identifiers": {
+            "__main__.IAccount": {
+                "type": "namespace"
+            },
+            "__main__.IAccount.Args": {
+                "full_name": "__main__.IAccount.Args",
+                "members": {},
+                "size": 0,
+                "type": "struct"
+            },
+            "__main__.IAccount.GET_PUBLIC_KEY_SELECTOR": {
+                "type": "const",
+                "value": 740926757903304703334766688525052991028117105695935472386075434843853795643
+            },
+            "__main__.IAccount.ImplicitArgs": {
+                "full_name": "__main__.IAccount.ImplicitArgs",
+                "members": {},
+                "size": 0,
+                "type": "struct"
+            },
+            "__main__.IAccount.Return": {
+                "full_name": "__main__.IAccount.Return",
+                "members": {},
+                "size": 0,
+                "type": "struct"
+            },
+            "__main__.IAccount.SIZEOF_LOCALS": {
+                "type": "const",
+                "value": 0
+            },
+            "__main__.IAccount.alloc": {
+                "destination": "starkware.cairo.common.alloc.alloc",
+                "type": "alias"
+            },
+            "__main__.IAccount.call_contract": {
+                "destination": "starkware.starknet.common.syscalls.call_contract",
+                "type": "alias"
+            },
+            "__main__.IAccount.delegate_call": {
+                "destination": "starkware.starknet.common.syscalls.delegate_call",
+                "type": "alias"
+            },
+            "__main__.IAccount.memcpy": {
+                "destination": "starkware.cairo.common.memcpy.memcpy",
+                "type": "alias"
+            },
             "starkware.cairo.common.cairo_builtins.BitwiseBuiltin": {
                 "full_name": "starkware.cairo.common.cairo_builtins.BitwiseBuiltin",
                 "members": {
