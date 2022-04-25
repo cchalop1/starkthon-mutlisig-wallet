@@ -1,10 +1,11 @@
 import { useStarknet, useStarknetInvoke } from "@starknet-react/core";
 import React, { useState } from "react";
-import { Contract, ContractInterface } from "starknet";
+import { Contract, ContractInterface, number } from "starknet";
 
 type Props = {
   contract: Contract;
   name: string;
+  idx: number;
 };
 
 export function Transaction(props: Props) {
@@ -13,11 +14,9 @@ export function Transaction(props: Props) {
     contract: props.contract,
     method: props.name,
   });
-  const [data, setData] = useState({ tx_id: "" });
-
   const handleSend = async () => {
     const res = await invoke({
-      args: [data.tx_id],
+      args: [String(props.idx)],
     });
     console.log(res);
   };
@@ -29,13 +28,6 @@ export function Transaction(props: Props) {
 
   return (
     <div>
-      <input
-        type={"text"}
-        id=""
-        placeholder="tx id"
-        value={data.tx_id}
-        onChange={(e) => setData({ ...data, tx_id: e.target.value })}
-      />
       <button onClick={handleSend}>{props.name}</button>
     </div>
   );
