@@ -67,7 +67,7 @@ func is_executed(tx_id: felt) -> (res: felt):
 end
 
 @storage_var
-func multi_signers(owners: felt*) -> (owner: felt)
+func multi_signers(owners: felt*) -> (owner: felt):
 end
 
 @storage_var
@@ -100,7 +100,7 @@ func constructor{
     # check that signer list is at least 1
     assert_greater_equal_1(_owners_len)
     # check that signers have an account
-    assert_not_equal(Account_get_public_key(_owners), 0)
+    checkSignerValidity(_owners_len, _owners)
     # add owners as signers
     multi_signers.write(_owners)
     required_confirmations.write(_required_confirmations)
@@ -361,6 +361,30 @@ func set_owners{
     set_owners(owners_len=owners_len -1, owners=owners+1)
     return ()
 end
+
+
+# @notice Verifies the validity of an account
+# @param owners, an array of starknet accounts
+
+func checkSignerValidity{
+        syscall_ptr: felt*, 
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr  }
+        (
+        owners_len : felt,
+        owners : felt*
+        ) :
+        alloc_locals
+        let account : felt = [owners]
+        Account_get_public_key(account)
+        with_attr error_message("Account address is invalid"):
+            assert_not_zero(account)
+        end
+        checkSignerValidity(owners_len=owners_len - 1, owners=owners+1)
+        return()
+end
+
+
 
 
 
