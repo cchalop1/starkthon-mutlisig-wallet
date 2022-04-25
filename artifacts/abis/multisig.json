@@ -87,13 +87,134 @@
     {
         "inputs": [
             {
-                "name": "_owners_len",
+                "name": "owner",
+                "type": "felt"
+            }
+        ],
+        "name": "view_is_owner",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "view_required_confirmations",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "view_tx_count",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "tx_id",
+                "type": "felt"
+            }
+        ],
+        "name": "view_transaction_data",
+        "outputs": [
+            {
+                "name": "res",
                 "type": "felt"
             },
             {
-                "name": "_owners",
-                "type": "felt*"
+                "name": "amount",
+                "type": "Uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "tx_id",
+                "type": "felt"
             },
+            {
+                "name": "owner",
+                "type": "felt"
+            }
+        ],
+        "name": "view_is_confirmed",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "tx_id",
+                "type": "felt"
+            }
+        ],
+        "name": "view_is_executed",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "tx_id",
+                "type": "felt"
+            }
+        ],
+        "name": "view_num_confirmations",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "view_eth_address",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
             {
                 "name": "_required_confirmations",
                 "type": "felt"
@@ -101,6 +222,14 @@
             {
                 "name": "_eth_address",
                 "type": "felt"
+            },
+            {
+                "name": "_owners_len",
+                "type": "felt"
+            },
+            {
+                "name": "_owners",
+                "type": "felt*"
             }
         ],
         "name": "constructor",

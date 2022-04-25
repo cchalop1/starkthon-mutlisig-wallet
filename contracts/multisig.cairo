@@ -1,7 +1,6 @@
 %lang starknet
 
-from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
-from starkware.starknet.common.messages import send_message_to_l1
+from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.math import assert_not_zero, assert_le, assert_nn, assert_nn_le, assert_lt
 from starkware.starknet.common.syscalls import (
@@ -80,7 +79,91 @@ end
 func eth_address() -> (res: felt):
 end
 
+####################
+# INTERNAL FUNCTIONS
+####################
+@view
+func view_is_owner{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(owner: felt) -> (res: felt):
+    let (result) = is_owner.read(owner)
+    return (result)
+end
 
+@view
+func view_required_confirmations{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }() -> (res: felt):
+    let (result) = required_confirmations.read()
+    return (result)
+end
+
+@view
+func view_tx_count{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }() -> (res: felt):
+    let (result) = tx_count.read()
+    return (result)
+end
+
+@view
+func view_transaction_data{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(tx_id: felt) -> (res: felt, amount:Uint256):
+    let (tx_data) = transaction_data.read(tx_id)
+    let receiver: felt = tx_data.receiver
+    let amount: Uint256 = tx_data.amount
+    return (receiver, amount)
+end
+
+@view
+func view_is_confirmed{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(tx_id: felt, owner: felt) -> (res: felt):
+    let (result) = is_confirmed.read(tx_id, owner)
+    return (result)
+end
+
+@view
+func view_is_executed{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(tx_id: felt) -> (res: felt):
+    let (result) = is_executed.read(tx_id)
+    return (result)
+end
+
+@view
+func view_num_confirmations{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(tx_id: felt) -> (res: felt):
+    let (result) = num_confirmations.read(tx_id)
+    return(result)
+end
+
+
+@view
+func view_eth_address{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }() -> (res: felt):
+    let (result) = eth_address.read()
+    return (result)
+end
 
 ####################
 # CONSTRUCTOR
@@ -92,15 +175,16 @@ func constructor{
         pedersen_ptr: HashBuiltin*,
         range_check_ptr
         
-    }(
-        _owners_len: felt,
-        _owners: felt*,
+    }(  
+        
         _required_confirmations: felt,
-        _eth_address: felt
+        _eth_address: felt,
+        _owners_len: felt,
+        _owners: felt*
     ):
-    alloc_locals 
+    #alloc_locals 
 
-    # check 1 <= _required_confirmations <= _owners_len
+    #check 1 <= _required_confirmations <= _owners_len
     assert_nn_le(_required_confirmations-1, _owners_len-1)
     required_confirmations.write(_required_confirmations)
     set_owners(owners_len=_owners_len, owners=_owners)
@@ -154,15 +238,15 @@ func submit_transaction{
 
     # get tx_count and write new tx_count
     let (tx_id) = tx_count.read() 
-    tx_id = tx_id + 1
-    tx_count.write(tx_id)
+    let new_tx_id: felt =  tx_id + 1
+    tx_count.write(new_tx_id)
 
     # write to mappings
     let tx_data : TransactionData = TransactionData(receiver=receiver, amount=amount)
-    transaction_data.write(tx_id, tx_data)
+    transaction_data.write(new_tx_id, tx_data)
 
     # emit event
-    transaction_submited.emit(tx_id, sender_address, receiver, amount)
+    transaction_submited.emit(new_tx_id, sender_address, receiver, amount)
     return()
 end
 

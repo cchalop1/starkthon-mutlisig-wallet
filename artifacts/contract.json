@@ -6556,6 +6556,10 @@
                         "cairo_type": "felt",
                         "offset": 1
                     },
+                    "chain_id": {
+                        "cairo_type": "felt",
+                        "offset": 6
+                    },
                     "max_fee": {
                         "cairo_type": "felt",
                         "offset": 2
@@ -6568,12 +6572,16 @@
                         "cairo_type": "felt",
                         "offset": 3
                     },
+                    "transaction_hash": {
+                        "cairo_type": "felt",
+                        "offset": 5
+                    },
                     "version": {
                         "cairo_type": "felt",
                         "offset": 0
                     }
                 },
-                "size": 5,
+                "size": 7,
                 "type": "struct"
             },
             "starkware.starknet.common.syscalls.storage_read": {

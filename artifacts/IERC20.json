@@ -256,6 +256,14 @@
                 "destination": "starkware.cairo.common.registers.get_fp_and_pc",
                 "type": "alias"
             },
+            "starkware.cairo.common.registers.get_ap": {
+                "destination": "starkware.cairo.lang.compiler.lib.registers.get_ap",
+                "type": "alias"
+            },
+            "starkware.cairo.common.registers.get_fp_and_pc": {
+                "destination": "starkware.cairo.lang.compiler.lib.registers.get_fp_and_pc",
+                "type": "alias"
+            },
             "starkware.cairo.common.uint256.ALL_ONES": {
                 "type": "const",
                 "value": 340282366920938463463374607431768211455
@@ -840,6 +848,10 @@
                         "cairo_type": "felt",
                         "offset": 1
                     },
+                    "chain_id": {
+                        "cairo_type": "felt",
+                        "offset": 6
+                    },
                     "max_fee": {
                         "cairo_type": "felt",
                         "offset": 2
@@ -852,12 +864,16 @@
                         "cairo_type": "felt",
                         "offset": 3
                     },
+                    "transaction_hash": {
+                        "cairo_type": "felt",
+                        "offset": 5
+                    },
                     "version": {
                         "cairo_type": "felt",
                         "offset": 0
                     }
                 },
-                "size": 5,
+                "size": 7,
                 "type": "struct"
             }
         },
