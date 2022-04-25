@@ -15,9 +15,7 @@ from starkware.starknet.common.syscalls import (
 )
 from contracts.utils.Utils import TRANSACTION_EXPIRY
 from contracts.token.IERC20 import IERC20
-
-#from openzeppelin.account import IAccount
-
+from contracts.interfaces.IAccount import IAccount
 
 ####################
 # STRUCTS
@@ -444,9 +442,9 @@ func set_owners{
     let current_owner: felt = [owners]
 
     # check owner has a valid account
-    #let (public_key) = IAccount.get_public_key(current_owner)
+    let (public_key) = IAccount.get_public_key(current_owner)
     with_attr error_message("Account address is invalid"):
-        #assert_not_zero(public_key)
+        assert_not_zero(public_key)
     end
     # check not double owner
     let (owner_status) = is_owner.read(current_owner)
