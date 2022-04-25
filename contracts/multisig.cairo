@@ -8,6 +8,8 @@ from starkware.starknet.common.syscalls import (
     get_contract_address, get_caller_address
 )
 
+from openzeppelin.account import IAccount
+
 
 ####################
 # STRUCTS
@@ -91,6 +93,7 @@ func constructor{
     # check 1 <= _required_confirmations <= _owners_len
     assert_nn_le(_required_confirmations-1, _owners_len-1)
     required_confirmations.write(_required_confirmations)
+    assert_greater_equal_1(_owners)
     set_owners(owners_len=_owners_len, owners=_owners)
 
     return ()
@@ -330,11 +333,11 @@ func set_owners{
     
     let current_owner: felt = [owners]
 
-    # check owner not zero
-    with_attr error_message("owner is 0"):
-        assert_not_zero(current_owner)
+    # check owner has a valid account
+    let (public_key) = IAccount.get_public_key(current_owner)
+    with_attr error_message("Account address is invalid"):
+        assert_not_zero(public_key)
     end
-
     # check not double owner
     let (owner_status) = is_owner.read(current_owner)
     with_attr error_message("already owner"):
