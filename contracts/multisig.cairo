@@ -7,6 +7,9 @@ from starkware.cairo.common.math import assert_not_zero, assert_le, assert_nn, a
 from starkware.starknet.common.syscalls import (
     get_contract_address, get_caller_address
 )
+from contracts.utils.utils import assert_greater_equal_1
+from openzeppelin.account import IAccount
+from openzeppelin.account.library import ( Account_get_public_key)
 
 
 ####################
@@ -64,6 +67,10 @@ func is_executed(tx_id: felt) -> (res: felt):
 end
 
 @storage_var
+func multi_signers() -> (owner: felt)
+end
+
+@storage_var
 func num_confirmations(tx_id: felt) -> (res: felt):
 end
 
@@ -90,6 +97,12 @@ func constructor{
 
     # check 1 <= _required_confirmations <= _owners_len
     assert_nn_le(_required_confirmations-1, _owners_len-1)
+    # check that signer list is at least 1
+    assert_greater_equal_1(_owners_len)
+    # check that signers have an account
+    assert_not_equal(Account_get_public_key(_owners), 0)
+    # add owners as signers
+    multi_signers.write(_owners)
     required_confirmations.write(_required_confirmations)
     set_owners(owners_len=_owners_len, owners=_owners)
 
