@@ -258,5 +258,26 @@
         "name": "execute_transaction",
         "outputs": [],
         "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "tx_id",
+                "type": "felt"
+            }
+        ],
+        "name": "get_transaction_payload",
+        "outputs": [
+            {
+                "name": "payload_len",
+                "type": "felt"
+            },
+            {
+                "name": "payload",
+                "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     }
 ]

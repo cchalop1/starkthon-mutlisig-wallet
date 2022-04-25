@@ -73,6 +73,10 @@ end
 func transaction_payloads(tx_id: felt, payload_id: felt) -> (payload: felt):
 end
 
+@storage_var
+func _transaction_calldata(tx_id : felt, payload_id : felt) -> (res : felt):
+end
+
 
 ####################
 # VIEW FUNCTIONS
@@ -226,7 +230,8 @@ func submit_transaction{
     transaction_data.write(new_tx_id, tx_data)
 
     # fill transaction_payloads
-    set_payloads(new_tx_id,payload_len, payload)
+    #set_payloads(new_tx_id,payload_len, payload)
+    set_transaction_payload(new_tx_id,0, payload_len, payload)
 
     # emit event
     transaction_submited.emit(new_tx_id, sender_address, l1_contract, payload_len, payload)
@@ -373,8 +378,10 @@ func execute_transaction{
     # get transaction data to execute
     let (tx_data) = transaction_data.read(tx_id)
     let l1_contract: felt = tx_data.l1_contract
-    let payload_len: felt = tx_data.payload_len
-    let (payload) = get_payloads(tx_id, payload_len)
+    #let payload_len: felt = tx_data.payload_len
+    #let (payload) = get_payloads(tx_id, payload_len)
+
+    let (payload_len, payload) = get_transaction_payload(tx_id=tx_id)
 
     # update mappings
     is_executed.write(tx_id, 1)
@@ -468,34 +475,158 @@ end
 # @param tx_id transaction id
 # @param payloads_len The number of payloads to set
 # @return payloads A pointer to the payloads array
-func get_payloads{
-        syscall_ptr: felt*, 
-        pedersen_ptr: HashBuiltin*,
-        range_check_ptr  
-     }(
-        tx_id: felt,
-        payloads_len: felt,
-    )->(payloads: felt*):
-    alloc_locals
-    let (local payloads) = alloc()
-    _get_payloads(tx_id, payloads_len, payloads)
-    return(payloads)
+# func get_payloads{
+#         syscall_ptr: felt*, 
+#         pedersen_ptr: HashBuiltin*,
+#         range_check_ptr  
+#      }(
+#         tx_id: felt,
+#         payloads_len: felt,
+#     )->(payloads: felt*):
+#     alloc_locals
+#     let (local payloads) = alloc()
+#     _get_payloads(tx_id, payloads_len, payloads)
+#     return(payloads)
    
-end
+# end
 
-# Fills `payloads` with the  of the payloads stored in transaction_payloads
-func _get_payloads{
-        syscall_ptr: felt*, 
-        pedersen_ptr: HashBuiltin*,
-        range_check_ptr  
-     }(tx_id: felt, payloads_len: felt, payloads: felt*):
-    if payloads_len == 0:
+# # Fills `payloads` with the  of the payloads stored in transaction_payloads
+# func _get_payloads{
+#         syscall_ptr: felt*, 
+#         pedersen_ptr: HashBuiltin*,
+#         range_check_ptr  
+#      }(tx_id: felt, payloads_len: felt, payloads: felt*):
+#     if payloads_len == 0:
+#         return ()
+#     end
+
+#     let (payload) = transaction_payloads.read(tx_id, payloads_len) 
+#     assert [payloads] = payload 
+
+#     _get_payloads(tx_id=tx_id, payloads_len=payloads_len-1, payloads=payloads+1)
+#     return ()
+# end
+
+
+
+func set_transaction_payload{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr,
+    }(
+        tx_id : felt,
+        payload_id : felt,
+        payload_len : felt,
+        payload : felt*,
+    ):
+    if payload_id == payload_len:
         return ()
     end
 
-    let (payload) = transaction_payloads.read(tx_id, payloads_len) 
-    assert [payloads] = payload 
+     # Write the current iteration to storage
+    _transaction_calldata.write(
+        tx_id=tx_id,
+        payload_id=payload_id,
+        value=[payload],
+    )
 
-    _get_payloads(tx_id=tx_id, payloads_len=payloads_len-1, payloads=payloads+1)
+    # Recursively write the rest
+    set_transaction_payload(
+        tx_id=tx_id,
+        payload_id=payload_id + 1,
+        payload_len=payload_len,
+        payload=payload + 1,
+    )
     return ()
+end
+
+
+# @notice gets payload of tx recursively.
+# @notice payload are set in the inverse order and are recovered in the inverse order too
+# @param tx_id transaction id
+# @param payload_len The number of payload to set
+# @return payload A pointer to the payload array
+# func get_payload{
+#         syscall_ptr: felt*, 
+#         pedersen_ptr: HashBuiltin*,
+#         range_check_ptr  
+#      }(
+#         tx_id: felt,
+#         payload_len: felt,
+#     )->(payload: felt*):
+#     alloc_locals
+#     let (local payload) = alloc()
+#     _get_payload(tx_id, payload_len, payload)
+#     return(payload)
+   
+# end
+
+# # Fills `payload` with the  of the payload stored in transaction_payload
+# func _get_payload{
+#         syscall_ptr: felt*, 
+#         pedersen_ptr: HashBuiltin*,
+#         range_check_ptr  
+#      }(tx_id: felt, payload_len: felt, payload: felt*):
+#     if payload_len == 0:
+#         return ()
+#     end
+
+#     let (payload) = transaction_payload.read(tx_id, payload_len) 
+#     assert [payload] = payload 
+
+#     _get_payload(tx_id=tx_id, payload_len=payload_len-1, payload=payload+1)
+#     return ()
+# end
+
+func _get_transaction_payload{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        tx_id : felt,
+        payload_id : felt,
+        payload_len : felt,
+        payload : felt*
+    ):
+    if payload_id == payload_len:
+        return ()
+    end
+
+    let (payload_arg) = _transaction_calldata.read(tx_id=tx_id, payload_id=payload_id)
+    assert payload[payload_id] = payload_arg
+
+    _get_transaction_payload(
+        tx_id=tx_id,
+        payload_id=payload_id + 1,
+        payload_len=payload_len,
+        payload=payload
+    )
+    return ()
+end
+
+@view
+func get_transaction_payload{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(tx_id : felt) ->(
+        payload_len: felt,
+        payload: felt*
+    ):
+    alloc_locals
+    let (tx_data) = transaction_data.read(tx_id=tx_id)
+    let payload_len: felt = tx_data.payload_len
+    let (payload) = alloc()
+    if payload_len == 0:
+        return (0 , payload)
+    end
+
+    # Recursively get more calldata args and add them to the list
+    _get_transaction_payload(
+        tx_id=tx_id,
+        payload_id=0,
+        payload_len=payload_len,
+        payload=payload
+    )
+    return (payload_len=payload_len, payload=payload)
 end
