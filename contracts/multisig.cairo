@@ -13,10 +13,10 @@ from starkware.cairo.common.uint256 import (
 from starkware.starknet.common.syscalls import (
     get_block_number
 )
-
+from contracts.utils.Utils import TRANSACTION_EXPIRY
 from contracts.token.IERC20 import IERC20
 
-from contracts.interfaces.IAccount import IAccount
+#from openzeppelin.account import IAccount
 
 
 ####################
@@ -227,7 +227,8 @@ func submit_transaction{
        
     ):
     alloc_locals
-    transaction_block.write(get_block_number)
+    let (current_block) = get_block_number()
+    transaction_block.write(current_block)
     let (sender_address) = get_caller_address()
 
     # check is owner 
@@ -368,9 +369,8 @@ func execute_transaction{
      }(
         tx_id: felt,
     ):
-    isExpired()
     alloc_locals
-
+    isExpired()
     # check is owner
     let (sender_address) = get_caller_address() 
     let (owner_status) = is_owner.read(sender_address)
@@ -444,9 +444,9 @@ func set_owners{
     let current_owner: felt = [owners]
 
     # check owner has a valid account
-    let (public_key) = IAccount.get_public_key(current_owner)
+    #let (public_key) = IAccount.get_public_key(current_owner)
     with_attr error_message("Account address is invalid"):
-        assert_not_zero(public_key)
+        #assert_not_zero(public_key)
     end
     # check not double owner
     let (owner_status) = is_owner.read(current_owner)
@@ -470,9 +470,10 @@ func isExpired{
         pedersen_ptr: HashBuiltin*,
         range_check_ptr}():
         alloc_locals
-        let (block_creation_number) = transaction_block.read()
-        let (target_block_number) = block_creation_number + (4 * 60 * 5)
-        assert_le(get_block_number(), target_block_number)
+        let (block_creation_number : felt) = transaction_block.read()
+        let target_block_number : felt = block_creation_number + TRANSACTION_EXPIRY
+        let (current_block : felt) = get_block_number()
+        assert_le(current_block, target_block_number)
         return()
 end
 
