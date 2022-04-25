@@ -7,6 +7,11 @@ from starkware.cairo.common.math import assert_not_zero, assert_le, assert_nn, a
 from starkware.starknet.common.syscalls import (
     get_contract_address, get_caller_address
 )
+from starkware.cairo.common.uint256 import (
+    Uint256, uint256_add, uint256_sub, uint256_mul, uint256_le, uint256_lt, uint256_check, uint256_eq, uint256_neg
+)
+
+from contracts.token.IERC20 import IERC20
 
 
 ####################
@@ -15,7 +20,7 @@ from starkware.starknet.common.syscalls import (
 
 struct TransactionData:
     member receiver: felt
-    member amount: felt
+    member amount: Uint256
 end
 
 
@@ -24,7 +29,7 @@ end
 ####################
 
 @event
-func transaction_submited(tx_id: felt, owner: felt, receiver: felt, amount: felt):
+func transaction_submited(tx_id: felt, owner: felt, receiver: felt, amount: Uint256):
 end
 
 @event
@@ -33,6 +38,10 @@ end
 
 @event
 func transaction_executed(tx_id: felt, owner: felt):
+end
+
+@event
+func confirmation_revoked(tx_id: felt, owner: felt):
 end
 
 ####################
@@ -67,9 +76,11 @@ end
 func num_confirmations(tx_id: felt) -> (res: felt):
 end
 
-@event
-func confirmation_revoked(tx_id: felt, owner: felt):
+@storage_var
+func eth_address() -> (res: felt):
 end
+
+
 
 ####################
 # CONSTRUCTOR
@@ -85,6 +96,7 @@ func constructor{
         _owners_len: felt,
         _owners: felt*,
         _required_confirmations: felt,
+        _eth_address: felt
     ):
     alloc_locals 
 
@@ -92,6 +104,7 @@ func constructor{
     assert_nn_le(_required_confirmations-1, _owners_len-1)
     required_confirmations.write(_required_confirmations)
     set_owners(owners_len=_owners_len, owners=_owners)
+    eth_address.write(_eth_address)
 
     return ()
 end
@@ -113,7 +126,7 @@ func submit_transaction{
         range_check_ptr  
      }(
         receiver: felt,
-        amount: felt,
+        amount: Uint256,
         #payload: felt*,
        
     ):
@@ -134,7 +147,8 @@ func submit_transaction{
 
     # check is amount is positif
     with_attr error_message("non positif amount"):
-        assert_nn_le(1, amount)
+        let zero : Uint256 = Uint256(0, 0)
+        uint256_lt(zero, amount)
     end
 
 
@@ -290,13 +304,14 @@ func execute_transaction{
     # get transaction data to execute
     let (tx_data) = transaction_data.read(tx_id)
     let receiver: felt = tx_data.receiver
-    let amount: felt = tx_data.amount
+    let amount: Uint256 = tx_data.amount
 
     # update mappings
     is_executed.write(tx_id, 1)
 
     # execute transaction 
-    # make transfer here
+    let (weth) = eth_address.read()
+    IERC20.transfer(contract_address=weth, recipient=receiver, amount=amount)
    
     # emit event
     transaction_executed.emit(tx_id, sender_address)
