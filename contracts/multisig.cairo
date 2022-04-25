@@ -67,7 +67,7 @@ func is_executed(tx_id: felt) -> (res: felt):
 end
 
 @storage_var
-func multi_signers() -> (owner: felt)
+func multi_signers(owners: felt*) -> (owner: felt)
 end
 
 @storage_var
