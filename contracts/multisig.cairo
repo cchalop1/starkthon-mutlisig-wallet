@@ -10,9 +10,13 @@ from starkware.cairo.common.uint256 import (
     Uint256, uint256_add, uint256_sub, uint256_mul, uint256_le, uint256_lt, uint256_check, uint256_eq, uint256_neg
 )
 
+from starkware.starknet.common.syscalls import (
+    get_block_number
+)
+
 from contracts.token.IERC20 import IERC20
 
-from openzeppelin.account import IAccount
+from contracts.interfaces.IAccount import IAccount
 
 
 ####################
@@ -66,6 +70,10 @@ func transaction_data(tx_id: felt) -> (res: TransactionData):
 end
 
 @storage_var
+func transaction_block() -> (res: felt):
+end
+
+@storage_var
 func is_confirmed(tx_id: felt, owner: felt) -> (res: felt):
 end
 
@@ -80,6 +88,7 @@ end
 @storage_var
 func eth_address() -> (res: felt):
 end
+
 
 ####################
 # INTERNAL FUNCTIONS
@@ -189,7 +198,7 @@ func constructor{
     #check 1 <= _required_confirmations <= _owners_len
     assert_nn_le(_required_confirmations-1, _owners_len-1)
     required_confirmations.write(_required_confirmations)
-    assert_greater_equal_1(_owners)
+    assert_le(1,_owners_len)
     set_owners(owners_len=_owners_len, owners=_owners)
     eth_address.write(_eth_address)
 
@@ -218,6 +227,7 @@ func submit_transaction{
        
     ):
     alloc_locals
+    transaction_block.write(get_block_number)
     let (sender_address) = get_caller_address()
 
     # check is owner 
@@ -358,6 +368,7 @@ func execute_transaction{
      }(
         tx_id: felt,
     ):
+    isExpired()
     alloc_locals
 
     # check is owner
@@ -450,6 +461,22 @@ func set_owners{
     set_owners(owners_len=owners_len -1, owners=owners+1)
     return ()
 end
+
+
+# @notice Checks if a transaction is expired
+# @notice the transaction is valid for 5 hours
+func isExpired{
+        syscall_ptr: felt*, 
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr}():
+        alloc_locals
+        let (block_creation_number) = transaction_block.read()
+        let (target_block_number) = block_creation_number + (4 * 60 * 5)
+        assert_le(get_block_number(), target_block_number)
+        return()
+end
+
+
 
 
 
