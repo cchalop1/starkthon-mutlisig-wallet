@@ -5,7 +5,7 @@
 Voting on L1 is expensive.
 
 ## TL;DR
-The goal of the project is to design a system where participants can take decision on L2 and execute it on L1. </br>
+The goal of the project is to design a system where participants can take decisions on L2 and execute it on L1. </br>
 
 **Example** </br>
 DAO taking a decision on L2 about fund allocation, where to allocate money and to whom. </br>
