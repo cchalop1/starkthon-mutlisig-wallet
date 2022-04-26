@@ -26,7 +26,7 @@ Address: [Contract](https://goerli.voyager.online/contracts/0x01470297d544ad1f33
 
 #### L1 Target example  - Goerli - Verified
 Example of Target contract the consumed a decision made on L2 </br>
-Decision is increase a storage variable in this case. </br>
+Decision is to increase a storage variable in this case. </br>
 [Contract](https://goerli.etherscan.io/address/0xf18a5b57d9848cd8ae8c3ce044dae95ac93bd039#readContract)
 
 
