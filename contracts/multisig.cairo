@@ -4,7 +4,7 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.math import assert_not_zero, assert_le, assert_nn, assert_nn_le, assert_lt
 from starkware.starknet.common.syscalls import (
-    get_contract_address, get_caller_address
+    get_contract_address, get_caller_address, storage_write
 )
 from starkware.cairo.common.uint256 import (
     Uint256, uint256_add, uint256_sub, uint256_mul, uint256_le, uint256_lt, uint256_check, uint256_eq, uint256_neg
@@ -57,6 +57,10 @@ end
 
 @storage_var
 func is_owner(owner: felt) -> (res: felt):
+end
+
+@storage_var
+func owner() -> (res:felt):
 end
 
 @storage_var
@@ -174,6 +178,11 @@ func view_eth_address{
     return (result)
 end
 
+@view
+func view_owners{}() -> (res: felt*):
+let (result) = owner.read()
+return (result)
+
 ####################
 # CONSTRUCTOR
 ####################
@@ -191,13 +200,16 @@ func constructor{
         _owners_len: felt,
         _owners: felt*
     ):
-    #alloc_locals 
 
     #check 1 <= _required_confirmations <= _owners_len
     assert_nn_le(_required_confirmations-1, _owners_len-1)
+    # stores the required confirmations on storage
     required_confirmations.write(_required_confirmations)
+    # check that the number of signers is greater than 1
     assert_le(1,_owners_len)
+    # writes owner to storage
     set_owners(owners_len=_owners_len, owners=_owners)
+    #TESTING - TO REMOVE
     eth_address.write(_eth_address)
 
     return ()
@@ -415,7 +427,24 @@ func execute_transaction{
     return()
 end
 
-
+@external
+func change_owner{syscall_ptr: felt*, 
+                pedersen_ptr: HashBuiltin*,
+                range_check_ptr} (
+                previous_owner: felt, 
+                new_owner: felt
+                ) -> (res: felt):
+                let (public_key) = IAccount.get_public_key(new_owner)
+                with_attr error_message("Account address is invalid"):
+                    assert_not_zero(public_key)
+                end
+                # removes the account as owner
+                is_owner.write(previous_owner, 0)
+                # stores a reference to the previous owner
+                let (previous_owner : felt*) = owner.read()
+                # updates the storage slot of previous owner with the new owner
+                &[previous_owner] = new_owner
+                return (1) 
 
 ####################
 # INTERNAL FUNCTIONS
@@ -433,8 +462,6 @@ func set_owners{
         owners_len: felt,
         owners: felt*,
     ):
-    #alloc_locals
-    # if no more owners
     if owners_len == 0:
        return ()
     end
@@ -454,6 +481,9 @@ func set_owners{
 
     # set the owner
     is_owner.write(current_owner, 1)
+
+    # store the owner account and its address
+    owner.write(current_owner)
     
     # set remaining owners recursively
     set_owners(owners_len=owners_len -1, owners=owners+1)
