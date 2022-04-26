@@ -11,8 +11,8 @@ The goal of the project is to design a system where participants can take decisi
 DAO taking a decision on L2 about fund allocation, where to allocate money and to whom. </br>
 
 Work flow :
-- Have an L1 contract that consume messages from a specific L2 governance contract, in DAO example L1 consumes message with payload including the address of the recipient and amount of allocation.
 - Have an L2 multi sig contract (for example our multisig_l2l1.cairo).
+- Have an L1 contract that consume messages from this specific L2 governance contract, in DAO example L1 consumes message with payload including the address of the recipient and amount of allocation.
 - Submit a transaction with L1 target contract and the payload to be consumed.
 - Vote.
 - If successful execute and send message to L1.
