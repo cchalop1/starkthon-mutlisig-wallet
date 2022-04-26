@@ -19,7 +19,8 @@ export function SubmitTransaction(props: Props) {
   });
 
   const handleSend = async () => {
-    const args = [data.l1_contract, data.payload.split(",")];
+    const args = [data.l1_contract, data.payload.split(",").length, data.payload.split(",")];
+    console.log(args);
     const res = await invoke({
       args: args,
     });
