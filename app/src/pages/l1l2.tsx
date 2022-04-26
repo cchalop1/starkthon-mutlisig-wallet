@@ -14,7 +14,7 @@ const Home: NextPage = () => {
   const { contract: mutlisig } = useContract({
     abi: MultisigAbi as Abi,
     address:
-      "0x023d3a5d02e079b9df97539f23479d6be9e1432deeaef942a37edfa4f1d8ead7",
+      "0x01470297d544ad1f338376f77cad34ff6cc03b5fa89e5c952d437ca5f7194044",
   });
 
   const { data: numberTransaction } = useStarknetCall({
