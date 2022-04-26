@@ -1,4 +1,4 @@
-# starkthon-mutlisig-wallet
+# *Sig X*
 
 
 ## Problem
